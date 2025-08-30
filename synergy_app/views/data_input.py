@@ -42,6 +42,7 @@ class DataInputView:
                 key="condition_type"
             )
             
+            # Always show amount inputs for non-base conditions
             amount_a, amount_b = self._get_amounts(condition_type)
             
             # Replicate values input
@@ -55,9 +56,9 @@ class DataInputView:
             
             col1, col2 = st.columns(2)
             with col1:
-                submit = st.form_submit_button("➕ Add Data Point", type="primary", use_container_width=True)
+                submit = st.form_submit_button("➕ Add Data Point", type="primary")
             with col2:
-                if st.form_submit_button("📋 Paste from Clipboard", use_container_width=True):
+                if st.form_submit_button("📋 Paste from Clipboard"):
                     st.info("Paste data in the text area above")
             
             if submit:
@@ -68,27 +69,40 @@ class DataInputView:
         amount_a = 0.0
         amount_b = 0.0
         
-        if condition_type == "Additive A Only":
+        if condition_type == "Base Electrolyte":
+            st.info("Base electrolyte: Both amounts = 0")
+            
+        elif condition_type == "Additive A Only":
+            st.write("**Concentration Settings:**")
             amount_a = st.number_input(
                 f"{self.analyzer.additive_a_name} Amount ({self.analyzer.unit})",
                 min_value=0.0,
                 step=0.1,
+                value=1.0,
                 key="amount_a_only"
             )
+            st.info(f"{self.analyzer.additive_b_name} = 0 (not present)")
+            
         elif condition_type == "Additive B Only":
+            st.write("**Concentration Settings:**")
             amount_b = st.number_input(
                 f"{self.analyzer.additive_b_name} Amount ({self.analyzer.unit})",
                 min_value=0.0,
                 step=0.1,
+                value=1.0,
                 key="amount_b_only"
             )
+            st.info(f"{self.analyzer.additive_a_name} = 0 (not present)")
+            
         elif condition_type == "Combination":
+            st.write("**Concentration Settings:**")
             col1, col2 = st.columns(2)
             with col1:
                 amount_a = st.number_input(
                     f"{self.analyzer.additive_a_name} ({self.analyzer.unit})",
                     min_value=0.0,
                     step=0.1,
+                    value=1.0,
                     key="amount_a_comb"
                 )
             with col2:
@@ -96,6 +110,7 @@ class DataInputView:
                     f"{self.analyzer.additive_b_name} ({self.analyzer.unit})",
                     min_value=0.0,
                     step=0.1,
+                    value=1.0,
                     key="amount_b_comb"
                 )
         
@@ -232,12 +247,12 @@ class DataInputView:
                         st.write(f"Mean: {data.mean:.3f}")
                     
                     with col2:
-                        if st.button("🗑️ Delete This Condition", type="secondary", use_container_width=True):
+                        if st.button("🗑️ Delete This Condition", type="secondary"):
                             del self.analyzer.data[condition_to_edit]
                             st.success(f"✅ Deleted {condition_to_edit}")
                             st.rerun()
                         
-                        if st.button("✏️ Edit Values", use_container_width=True):
+                        if st.button("✏️ Edit Values"):
                             st.session_state[f'editing_{condition_to_edit}'] = True
                             st.rerun()
                     
@@ -253,7 +268,7 @@ class DataInputView:
                         
                         col1, col2 = st.columns(2)
                         with col1:
-                            if st.button("💾 Save Changes", type="primary", use_container_width=True):
+                            if st.button("💾 Save Changes", type="primary"):
                                 try:
                                     new_values = self._parse_values(new_values_input)
                                     if new_values and self._validate_values(new_values):
@@ -271,7 +286,7 @@ class DataInputView:
                                     st.error(f"Invalid input: {str(e)}")
                         
                         with col2:
-                            if st.button("❌ Cancel", use_container_width=True):
+                            if st.button("❌ Cancel"):
                                 st.session_state[f'editing_{condition_to_edit}'] = False
                                 st.rerun()
         
@@ -280,7 +295,7 @@ class DataInputView:
         col1, col2, col3, col4 = st.columns(4)
         
         with col1:
-            if st.button("🗑️ Clear All Data", use_container_width=True):
+            if st.button("🗑️ Clear All Data"):
                 # Confirm deletion
                 if st.session_state.get('confirm_clear', False):
                     self.analyzer.data = {}
@@ -292,16 +307,16 @@ class DataInputView:
                     st.warning("Click again to confirm deletion")
         
         with col2:
-            if st.button("📁 Import CSV", use_container_width=True):
+            if st.button("📁 Import CSV"):
                 st.session_state['show_import'] = True
                 st.rerun()
         
         with col3:
-            if st.button("📊 Export CSV", use_container_width=True, disabled=not self.analyzer.data):
+            if st.button("📊 Export CSV", disabled=not self.analyzer.data):
                 self._export_current_data()
         
         with col4:
-            if st.button("🔄 Refresh", use_container_width=True):
+            if st.button("🔄 Refresh"):
                 st.rerun()
         
         # Import CSV interface

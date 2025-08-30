@@ -150,11 +150,13 @@ class ReportView:
             report += "## Raw Data\n\n"
             
             for key, data in results.raw_data.items():
+                ci_text = f"[{data.ci_lower:.3f}, {data.ci_upper:.3f}]" if data.ci_lower is not None and data.ci_upper is not None else "N/A"
+                
                 report += f"""### {key.replace('_', ' ').title()}
 - **Composition**: {data.amount_a} + {data.amount_b} {self.analyzer.unit}
 - **Values**: {', '.join(f'{v:.3f}' for v in data.values)}
 - **Mean ± SD**: {data.mean:.3f} ± {data.std:.3f}
-- **95% CI**: [{data.ci_lower:.3f}, {data.ci_upper:.3f}] (if available)
+- **95% CI**: {ci_text}
 
 """
         

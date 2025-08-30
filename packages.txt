@@ -1,0 +1,5 @@
+# System packages for Streamlit Community Cloud
+# Add any required system packages here (one per line)
+# Common examples:
+# libgl1-mesa-glx
+# libglib2.0-0

@@ -24,7 +24,7 @@ streamlit run main_app.py
 ```
 
 ### Live Demo
-Visit: [https://your-app-name.streamlit.app](https://your-app-name.streamlit.app)
+Visit: [https://kim-app.streamlit.app/](https://kim-app.streamlit.app/)
 
 ## 📊 Usage
 

@@ -1,0 +1,8 @@
+condition_type,amount_a,amount_b,cycle_life,capacity_retention,coulombic_efficiency
+Base Electrolyte,0,0,500,16.5,98.5
+Additive A Only,10,0,450,12.8,97.2
+Additive B Only,0,2,600,85,99.1
+Combination,8,2,750,91,99.8
+Combination,7,3,720,89,99.6
+Combination,5,5,680,85,99.2
+Combination,3,7,620,75,98.9

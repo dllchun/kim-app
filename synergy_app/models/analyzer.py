@@ -8,7 +8,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
 from typing import Dict, List, Tuple, Optional, Any
 
-from .data_models import ExperimentData, SynergyResult, AnalysisResults
+from .data_models import ExperimentData, SynergyResult, AnalysisResults, ParameterData, ParameterSynergyResult
 from ..config.settings import ANALYSIS_CONFIG, SYNERGY_THRESHOLDS
 
 
@@ -32,20 +32,64 @@ class SynergyAnalyzer:
         self.effect_parameter = effect_parameter
     
     def add_data_point(self, condition_name: str, amount_a: float, 
-                       amount_b: float, values: List[float]) -> ExperimentData:
-        """Add experimental data point"""
-        data_point = ExperimentData(
-            amount_a=amount_a,
-            amount_b=amount_b,
-            values=values,
-            condition_name=condition_name
-        )
+                       amount_b: float, values: List[float], 
+                       parameter_name: str = None, unit: str = None) -> ExperimentData:
+        """Add experimental data point (supports multi-parameter)"""
+        
+        # Use primary parameter if not specified
+        if parameter_name is None:
+            parameter_name = self.effect_parameter
+        if unit is None:
+            unit = ""
+        
+        # Create or get existing data point
+        if condition_name in self.data:
+            data_point = self.data[condition_name]
+        else:
+            data_point = ExperimentData(
+                amount_a=amount_a,
+                amount_b=amount_b,
+                parameters={},
+                condition_name=condition_name
+            )
+        
+        # Add parameter data
+        param_data = ParameterData(parameter_name, unit, values)
         
         # Calculate confidence intervals
         if len(values) > 1:
             ci_lower, ci_upper = self._calculate_confidence_intervals(values)
-            data_point.ci_lower = ci_lower
-            data_point.ci_upper = ci_upper
+            param_data.ci_lower = ci_lower
+            param_data.ci_upper = ci_upper
+        
+        data_point.parameters[parameter_name] = param_data
+        self.data[condition_name] = data_point
+        
+        return data_point
+    
+    def add_multi_parameter_data(self, condition_name: str, amount_a: float, 
+                                amount_b: float, parameter_data: Dict[str, Dict[str, Any]]):
+        """Add data point with multiple parameters at once"""
+        data_point = ExperimentData(
+            amount_a=amount_a,
+            amount_b=amount_b,
+            parameters={},
+            condition_name=condition_name
+        )
+        
+        for param_name, param_info in parameter_data.items():
+            values = param_info['values']
+            unit = param_info.get('unit', '')
+            
+            param_data_obj = ParameterData(param_name, unit, values)
+            
+            # Calculate confidence intervals
+            if len(values) > 1:
+                ci_lower, ci_upper = self._calculate_confidence_intervals(values)
+                param_data_obj.ci_lower = ci_lower
+                param_data_obj.ci_upper = ci_upper
+            
+            data_point.parameters[param_name] = param_data_obj
         
         self.data[condition_name] = data_point
         return data_point

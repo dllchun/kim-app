@@ -10,6 +10,7 @@ sys.path.append(str(Path(__file__).parent))
 
 from synergy_app.models import SynergyAnalyzer
 from synergy_app.views import DataInputView, AnalysisView, VisualizationView, ReportView
+from synergy_app.views.multi_parameter_input import MultiParameterInputView
 from synergy_app.components import SidebarComponent
 from synergy_app.config.settings import APP_CONFIG
 
@@ -88,26 +89,31 @@ def main():
         sidebar.render()
     
     # Main content tabs
-    tab_names = ["📊 Data Input", "📈 Analysis", "📉 Visualizations", "📋 Report"]
+    tab_names = ["📊 Single Parameter", "🎯 Multi-Parameter", "📈 Analysis", "📉 Visualizations", "📋 Report"]
     tabs = st.tabs(tab_names)
     
-    # Data Input Tab
+    # Single Parameter Input Tab
     with tabs[0]:
         data_input_view = DataInputView(analyzer)
         data_input_view.render()
     
-    # Analysis Tab
+    # Multi-Parameter Input Tab
     with tabs[1]:
+        multi_param_view = MultiParameterInputView(analyzer)
+        multi_param_view.render()
+    
+    # Analysis Tab
+    with tabs[2]:
         analysis_view = AnalysisView(analyzer)
         analysis_view.render()
     
     # Visualizations Tab
-    with tabs[2]:
+    with tabs[3]:
         viz_view = VisualizationView(analyzer)
         viz_view.render()
     
     # Report Tab
-    with tabs[3]:
+    with tabs[4]:
         report_view = ReportView(analyzer)
         report_view.render()
     

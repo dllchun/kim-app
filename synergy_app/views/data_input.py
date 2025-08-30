@@ -35,16 +35,18 @@ class DataInputView:
         """Render data input form"""
         st.subheader("Add Data Points")
         
+        # Move condition type selection outside form for dynamic updates
+        condition_type = st.selectbox(
+            "Condition Type",
+            ["Base Electrolyte", "Additive A Only", "Additive B Only", "Combination"],
+            key="condition_type_select"
+        )
+        
+        # Show amount inputs dynamically based on selection
+        amount_a, amount_b = self._get_amounts(condition_type)
+        
+        # Form for data input only
         with st.form("data_input_form", clear_on_submit=True):
-            condition_type = st.selectbox(
-                "Condition Type",
-                ["Base Electrolyte", "Additive A Only", "Additive B Only", "Combination"],
-                key="condition_type"
-            )
-            
-            # Always show amount inputs for non-base conditions
-            amount_a, amount_b = self._get_amounts(condition_type)
-            
             # Replicate values input
             st.write("Enter replicate values:")
             values_input = st.text_area(

@@ -305,7 +305,7 @@ class MultiParameterInputView:
                     })
                 
                 param_df = pd.DataFrame(param_rows)
-                st.dataframe(param_df, use_container_width=True, hide_index=True)
+                st.dataframe(param_df, width='stretch', hide_index=True)
                 
                 # Action buttons for this condition
                 col1, col2 = st.columns(2)
@@ -347,7 +347,7 @@ class MultiParameterInputView:
             })
         
         summary_df = pd.DataFrame(summary_data)
-        st.dataframe(summary_df, use_container_width=True, hide_index=True)
+        st.dataframe(summary_df, width='stretch', hide_index=True)
         
         # Quick actions
         col1, col2, col3 = st.columns(3)

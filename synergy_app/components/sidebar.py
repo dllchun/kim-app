@@ -150,11 +150,11 @@ class SidebarComponent:
             col1, col2 = st.columns(2)
             
             with col1:
-                if st.button("💾 Save JSON", use_container_width=True):
+                if st.button("💾 Save JSON", width='stretch'):
                     self._download_json()
             
             with col2:
-                if st.button("📊 Save CSV", use_container_width=True):
+                if st.button("📊 Save CSV", width='stretch'):
                     self._download_csv()
         
         # Auto-backup option

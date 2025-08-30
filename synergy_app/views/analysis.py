@@ -28,16 +28,16 @@ class AnalysisView:
         col1, col2, col3 = st.columns([2, 1, 1])
         
         with col1:
-            if st.button("🔬 Run Analysis", type="primary", use_container_width=True):
+            if st.button("🔬 Run Analysis", type="primary", width='stretch'):
                 self._run_analysis()
         
         with col2:
-            if st.button("📊 Export Results", use_container_width=True, 
+            if st.button("📊 Export Results", width='stretch', 
                         disabled=self.analyzer.results is None):
                 self._export_results()
         
         with col3:
-            if st.button("🔄 Reset Analysis", use_container_width=True,
+            if st.button("🔄 Reset Analysis", width='stretch',
                         disabled=self.analyzer.results is None):
                 self.analyzer.results = None
                 st.rerun()
@@ -204,7 +204,7 @@ class AnalysisView:
                 })
             
             df = pd.DataFrame(norm_data)
-            st.dataframe(df, use_container_width=True, hide_index=True)
+            st.dataframe(df, width='stretch', hide_index=True)
     
     def _display_model_results(self, results: AnalysisResults):
         """Display model fitting results"""
@@ -279,7 +279,7 @@ class AnalysisView:
             })
         
         df = pd.DataFrame(summary_data)
-        st.dataframe(df, use_container_width=True, hide_index=True)
+        st.dataframe(df, width='stretch', hide_index=True)
         
         # Download as CSV
         csv = df.to_csv(index=False)

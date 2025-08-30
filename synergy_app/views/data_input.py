@@ -226,7 +226,7 @@ class DataInputView:
                 })
             
             df = pd.DataFrame(data_list)
-            st.dataframe(df, use_container_width=True, hide_index=True)
+            st.dataframe(df, width='stretch', hide_index=True)
         
         with tab2:
             # Edit/Delete interface
@@ -380,7 +380,7 @@ class DataInputView:
                 
                 # Show preview
                 st.write("**File Preview:**")
-                st.dataframe(df.head(), use_container_width=True)
+                st.dataframe(df.head(), width='stretch')
                 
                 # Map columns
                 st.write("**Column Mapping:**")

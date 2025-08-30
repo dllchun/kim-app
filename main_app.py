@@ -3,16 +3,30 @@ Main Streamlit application entry point
 """
 import streamlit as st
 import sys
+import os
 from pathlib import Path
 
-# Add the synergy_app package to path
-sys.path.append(str(Path(__file__).parent))
+# Ensure we can import from the current directory
+current_dir = Path(__file__).parent
+sys.path.insert(0, str(current_dir))
 
-from synergy_app.models import SynergyAnalyzer
-from synergy_app.views import DataInputView, AnalysisView, VisualizationView, ReportView
-from synergy_app.views.multi_parameter_input import MultiParameterInputView
-from synergy_app.components import SidebarComponent
-from synergy_app.config.settings import APP_CONFIG
+# Set up Python path for Streamlit Cloud compatibility
+if str(current_dir) not in sys.path:
+    sys.path.insert(0, str(current_dir))
+
+try:
+    from synergy_app.models.analyzer import SynergyAnalyzer
+    from synergy_app.views.data_input import DataInputView
+    from synergy_app.views.analysis import AnalysisView
+    from synergy_app.views.visualization import VisualizationView
+    from synergy_app.views.report import ReportView
+    from synergy_app.views.multi_parameter_input import MultiParameterInputView
+    from synergy_app.components.sidebar import SidebarComponent
+    from synergy_app.config.settings import APP_CONFIG
+except ImportError as e:
+    st.error(f"❌ Import error: {e}")
+    st.error("Please ensure all required packages are installed from requirements.txt")
+    st.stop()
 
 
 def setup_page():

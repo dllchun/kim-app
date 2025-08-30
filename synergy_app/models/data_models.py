@@ -33,7 +33,7 @@ class ExperimentData:
     """Data structure for experiment conditions with multiple parameters"""
     amount_a: float
     amount_b: float
-    parameters: Dict[str, ParameterData]
+    parameters: Dict[str, ParameterData] = field(default_factory=dict)
     condition_name: str = ""
     timestamp: datetime = field(default_factory=datetime.now)
     
@@ -198,7 +198,7 @@ class SynergyResult:
     combination_id: str
     amount_a: float
     amount_b: float
-    parameter_results: Dict[str, ParameterSynergyResult]
+    parameter_results: Dict[str, ParameterSynergyResult] = field(default_factory=dict)
     
     def add_parameter_result(self, param_name: str, result: ParameterSynergyResult):
         """Add results for a specific parameter"""

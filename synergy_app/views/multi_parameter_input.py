@@ -86,7 +86,7 @@ class MultiParameterInputView:
             with col2:
                 st.write(f"Unit: {param['unit']}")
             with col3:
-                enabled = st.checkbox("", value=param['enabled'], key=f"param_enabled_{i}")
+                enabled = st.checkbox("Enable", value=param['enabled'], key=f"param_enabled_{i}", label_visibility="collapsed")
                 st.session_state.active_parameters[i]['enabled'] = enabled
             with col4:
                 if len(st.session_state.active_parameters) > 1:
